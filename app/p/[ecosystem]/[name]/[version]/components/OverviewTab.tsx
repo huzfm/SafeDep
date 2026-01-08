@@ -36,10 +36,10 @@ export function OverviewTab() {
         </p>
         <p className="text-sm text-slate-700 mt-2">
           The package exhibits multiple concerning behaviors. Several files
-          match the 'sys_net_recon.xml' YARA rule, suggesting potential system
-          and network information exfiltration. Additionally, the code
-          constructs JavaScript URLs and assigns them to formElement attributes,
-          which can lead to XSS if user-controlled data is involved.
+          match the &apos;sys_net_recon.xml&apos; YARA rule, suggesting
+          potential system and network information exfiltration. Additionally,
+          the code constructs JavaScript URLs and assigns them to formElement
+          attributes, which can lead to XSS if user-controlled data is involved.
           Furthermore, dynamic code execution is possible via
           formatDynamicImportPath if the CacheHandlers configuration is
           compromised. These factors, combined, indicate malicious intent.

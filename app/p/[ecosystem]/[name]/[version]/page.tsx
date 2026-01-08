@@ -67,7 +67,9 @@ export default async function PackagePage(props: PageProps) {
   });
 
   const data = res.toJson();
+
   const insight = data.insight;
+
   console.log(insight.licenseName);
   return (
     <main className="min-h-screen bg-slate-100 p-6">

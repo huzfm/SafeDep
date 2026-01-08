@@ -1,6 +1,14 @@
 import { Badge } from "@/components/ui/badge";
+interface VersionItem {
+  version: string;
+  publishedAt?: string;
+}
 
-export function VersionsTab({ insight }: { insight: any }) {
+interface VersionsInsight {
+  availableVersions?: VersionItem[];
+}
+
+export function VersionsTab({ insight }: { insight: VersionsInsight }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -15,7 +23,7 @@ export function VersionsTab({ insight }: { insight: any }) {
           </tr>
         </thead>
         <tbody>
-          {insight.availableVersions?.map((v: any, i: number) => (
+          {insight.availableVersions?.map((v, i) => (
             <tr
               key={i}
               className="border-b border-slate-100 hover:bg-slate-50 transition"

@@ -1,6 +1,16 @@
-export function LicensesTab({ insight }: { insight: any }) {
-  console.log(insight.licenseName);
-  console.log(insight.licenseid);
+interface LicenseItem {
+  licenseId: string;
+  licenseName?: string;
+  referenceUrl?: string;
+}
+
+interface InsightLicenses {
+  licenses?: {
+    licenses?: LicenseItem[];
+  };
+}
+
+export function LicensesTab({ insight }: { insight: InsightLicenses }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -19,7 +29,7 @@ export function LicensesTab({ insight }: { insight: any }) {
         </thead>
         <tbody>
           {insight.licenses?.licenses?.length ? (
-            insight.licenses.licenses.map((l: any, i: number) => (
+            insight.licenses.licenses.map((l, i) => (
               <tr
                 key={i}
                 className="border-b border-slate-100 hover:bg-slate-50 transition"
