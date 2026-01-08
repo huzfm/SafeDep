@@ -65,12 +65,14 @@ export default async function PackagePage(props: PageProps) {
       version,
     },
   });
+  const data = res.toJson() as unknown;
 
-  const data = res.toJson();
+  if (!data || typeof data !== "object" || !("insight" in data)) {
+    throw new Error("Invalid response from SafeDep API");
+  }
 
-  const insight = data.insight;
+  const insight = (data as { insight: any }).insight;
 
-  console.log(insight.licenseName);
   return (
     <main className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-6xl mx-auto space-y-4">
