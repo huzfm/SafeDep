@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { StatCard } from "./StatCard";
+import { Github } from "lucide-react";
 
 interface HeaderInsight {
   packagePublishedAt: string | number;
@@ -30,24 +31,28 @@ export function HeaderCard({
   insight: HeaderInsight;
 }) {
   return (
-    <div className="bg-white rounded-xl border-4 border-blue-500 p-6 shadow-sm">
+    <div className="bg-white  p-6 ">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+        <div className="flex flex-col gap-1">
+          <span className="text-[12px] font-thin text-slate-400 uppercase tracking-wider">
             powered by
           </span>
 
-          <Image
-            src="/logo.svg"
-            alt="SafeDep"
-            width={90}
-            height={24}
-            className="object-contain"
-          />
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="SafeDep"
+              width={30}
+              height={24}
+              className="object-contain"
+            />
+            <p className="font-semibold">SafeDep</p>
+          </div>
         </div>
 
         <button className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-teal-700 transition">
+          <Github width={12} height={12} />
           <span>Install GitHub App</span>
         </button>
       </div>
@@ -55,6 +60,7 @@ export function HeaderCard({
       {/* Package info */}
       <div className="mb-6 pb-6 border-b border-slate-200">
         <div className="flex items-center gap-2 mb-2">
+          <Github className="border rounded-sm p-1" />
           <span className="text-lg font-semibold text-slate-900">
             {name}@{version}
           </span>
