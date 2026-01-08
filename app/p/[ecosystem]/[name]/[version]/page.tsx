@@ -3,10 +3,15 @@ export const runtime = "nodejs";
 
 import { Ecosystem } from "@buf/safedep_api.bufbuild_es/safedep/messages/package/v1/ecosystem_pb.js";
 import { InsightService } from "@buf/safedep_api.connectrpc_es/safedep/services/insights/v2/insights_connect.js";
-import { createPromiseClient, Interceptor } from "@connectrpc/connect";
+import { createPromiseClient, type Interceptor } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-node";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-/* ------------------ Auth ------------------ */
+import { HeaderCard } from "./components/HeaderCard";
+import { OverviewTab } from "./components/OverviewTab";
+import { VulnerabilitiesTab } from "./components/VulnerabilitiesTab";
+import { VersionsTab } from "./components/VersionsTab";
+import { LicensesTab } from "./components/LicensesTab";
 
 function authenticationInterceptor(token: string, tenant: string): Interceptor {
   return (next) => async (req) => {
@@ -15,8 +20,6 @@ function authenticationInterceptor(token: string, tenant: string): Interceptor {
     return await next(req);
   };
 }
-
-/* ---------------- Ecosystem map ---------------- */
 
 function mapEcosystem(value: string): Ecosystem {
   switch (value.toLowerCase()) {
@@ -32,8 +35,6 @@ function mapEcosystem(value: string): Ecosystem {
       throw new Error(`Unsupported ecosystem: ${value}`);
   }
 }
-
-/* ---------------- Page ---------------- */
 
 interface PageProps {
   params: Promise<{
@@ -67,195 +68,71 @@ export default async function PackagePage(props: PageProps) {
 
   const data = res.toJson();
   const insight = data.insight;
-
+  console.log(insight.licenseName);
   return (
-    <main className="p-8 max-w-6xl mx-auto space-y-12">
-      {/* ---------------- Header ---------------- */}
-      <header>
-        <h1 className="text-3xl font-bold">
-          {name}@{version}
-        </h1>
-        <p className="text-gray-500">
-          Published: {new Date(insight.packagePublishedAt).toDateString()}
-        </p>
-      </header>
-
-      {/* ---------------- Summary ---------------- */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <SummaryCard
-          label="Vulnerabilities"
-          value={insight.vulnerabilities?.length || 0}
+    <main className="min-h-screen bg-slate-100 p-6">
+      <div className="max-w-6xl mx-auto space-y-4">
+        <HeaderCard
+          name={name}
+          version={version}
+          ecosystem={ecosystem}
+          insight={insight}
         />
-        <SummaryCard
-          label="Licenses"
-          value={insight.licenses?.licenses?.length || 0}
-        />
-        <SummaryCard
-          label="Dependencies"
-          value={insight.dependencies?.length || 0}
-        />
-        <SummaryCard
-          label="OpenSSF Score"
-          value={insight.projectInsights?.[0]?.scorecard?.score ?? "N/A"}
-        />
-      </section>
 
-      {/* ---------------- Vulnerabilities ---------------- */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-3">Vulnerabilities</h2>
+        <div className="bg-white rounded-lg border border-slate-200">
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="w-full justify-start border-b border-slate-200 bg-white p-0 rounded-none">
+              <TabsTrigger
+                value="overview"
+                className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+              >
+                Overview
+              </TabsTrigger>
 
-        {insight.vulnerabilities?.length ? (
-          <div className="space-y-4">
-            {insight.vulnerabilities.map((v: any, i: number) => (
-              <div key={i} className="border rounded-xl p-4 space-y-2">
-                <div className="flex justify-between">
-                  <div className="font-semibold text-lg">{v.id?.value}</div>
-                  <RiskBadge risk={v.severities?.[0]?.risk} />
-                </div>
+              {insight.vulnerabilities?.length > 0 && (
+                <TabsTrigger
+                  value="vulnerabilities"
+                  className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+                >
+                  Vulnerabilities
+                </TabsTrigger>
+              )}
 
-                <p className="text-gray-700">{v.summary}</p>
+              <TabsTrigger
+                value="versions"
+                className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+              >
+                Versions
+              </TabsTrigger>
 
-                <div className="text-sm text-gray-600">
-                  <p>
-                    <b>Aliases:</b>{" "}
-                    {v.aliases?.map((a: any) => a.value).join(", ")}
-                  </p>
-                  <p>
-                    <b>Published:</b> {new Date(v.publishedAt).toDateString()}
-                  </p>
-                  <p>
-                    <b>Modified:</b> {new Date(v.modifiedAt).toDateString()}
-                  </p>
-                </div>
+              <TabsTrigger
+                value="licenses"
+                className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+              >
+                License
+              </TabsTrigger>
+            </TabsList>
 
-                {v.severities?.map((s: any, idx: number) => (
-                  <div key={idx} className="text-xs bg-gray-100 rounded p-2">
-                    <b>{s.type.replace("TYPE_", "")}</b>: {s.score}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-green-600">No known vulnerabilities 🎉</p>
-        )}
-      </section>
+            <TabsContent value="overview" className="p-6 space-y-6">
+              <OverviewTab />
+            </TabsContent>
 
-      {/* ---------------- Verification ---------------- */}
-      {insight.projectInsights?.[0]?.scorecard && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-3">Verification & Trust</h2>
-
-          <div className="border rounded-xl p-4 mb-4">
-            <p>
-              <b>Repo:</b> {insight.projectInsights[0].project.name}
-            </p>
-            <p>
-              <b>Score:</b> {insight.projectInsights[0].scorecard.score}/10
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {insight.projectInsights[0].scorecard.checks.map(
-              (c: any, i: number) => (
-                <div key={i} className="border rounded-lg p-3">
-                  <div className="flex justify-between">
-                    <div className="font-medium">{c.name}</div>
-                    {typeof c.score === "number" && (
-                      <span className="text-sm px-2 py-1 rounded bg-gray-200">
-                        {c.score}/10
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">{c.reason}</p>
-                  {c.documentation?.url && (
-                    <a
-                      href={c.documentation.url}
-                      target="_blank"
-                      className="text-xs text-blue-600 underline"
-                    >
-                      Documentation
-                    </a>
-                  )}
-                </div>
-              )
+            {insight.vulnerabilities?.length > 0 && (
+              <TabsContent value="vulnerabilities" className="p-6">
+                <VulnerabilitiesTab insight={insight} />
+              </TabsContent>
             )}
-          </div>
-        </section>
-      )}
 
-      {/* ---------------- Licenses ---------------- */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-3">Licenses</h2>
-        <div className="flex gap-2 flex-wrap">
-          {insight.licenses?.licenses?.map((l: any, i: number) => (
-            <span
-              key={i}
-              className="px-3 py-1 rounded-full bg-gray-200 text-sm"
-            >
-              {l.licenseId}
-            </span>
-          ))}
+            <TabsContent value="versions" className="p-6">
+              <VersionsTab insight={insight} />
+            </TabsContent>
+
+            <TabsContent value="licenses" className="p-6">
+              <LicensesTab insight={insight} />
+            </TabsContent>
+          </Tabs>
         </div>
-      </section>
-
-      {/* ---------------- Dependencies ---------------- */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-3">
-          Direct Dependencies ({insight.dependencies?.length})
-        </h2>
-
-        <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-          {insight.dependencies?.map((d: any, i: number) => (
-            <li key={i} className="border rounded-lg px-3 py-2">
-              <span className="font-medium">{d.package.name}</span>
-              <span className="text-gray-500"> @{d.version}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ---------------- Versions ---------------- */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-3">Available Versions</h2>
-
-        <div className="max-h-72 overflow-auto border rounded-xl p-3 text-sm">
-          <ul className="grid grid-cols-2 md:grid-cols-4 gap-1">
-            {insight.availableVersions?.map((v: any, i: number) => (
-              <li key={i}>{v.version}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      </div>
     </main>
-  );
-}
-
-/* ---------------- UI Helpers ---------------- */
-
-function SummaryCard({ label, value }: { label: string; value: any }) {
-  return (
-    <div className="p-4 border rounded-xl">
-      <div className="text-gray-500 text-sm">{label}</div>
-      <div className="text-2xl font-bold">{value}</div>
-    </div>
-  );
-}
-
-function RiskBadge({ risk }: { risk?: string }) {
-  if (!risk) return null;
-
-  const color = risk.includes("CRITICAL")
-    ? "bg-red-100 text-red-800"
-    : risk.includes("HIGH")
-    ? "bg-orange-100 text-orange-800"
-    : risk.includes("MEDIUM")
-    ? "bg-yellow-100 text-yellow-800"
-    : "bg-green-100 text-green-800";
-
-  return (
-    <span className={`text-xs px-2 py-1 rounded ${color}`}>
-      {risk.replace("RISK_", "")}
-    </span>
   );
 }
