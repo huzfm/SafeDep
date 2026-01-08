@@ -11,7 +11,9 @@
   "dependencies": {
     "next": "16.1.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "@buf/safedep_api.connectrpc_es": "^1.6.1-20241117092917-2fd4dbf7c52e.1",
+    "@connectrpc/connect-node": "^1.6.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
