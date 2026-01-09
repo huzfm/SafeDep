@@ -9,7 +9,10 @@ Before installing, make sure you have:
 - SafeDep API key
 - SafeDep Tenant ID
 
----
+
+You can check the deployed application here:  
+ **https://safedep.vercel.app**
+
 
 ## ⚙️ Installation Guide
 
