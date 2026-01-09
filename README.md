@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SafeDep Package Insight App
 
-## Getting Started
+This project is a Next.js application that integrates with the SafeDep API to fetch and display security insights for open-source packages across multiple ecosystems.
 
-First, run the development server:
+The application supports dynamic routes to analyze packages from npm, PyPI, Maven, Go, RubyGems, and more.
+
+---
+
+## 📦 Requirements
+
+Before installing, make sure you have:
+
+- Node.js 18 or higher
+- npm or pnpm installed
+- SafeDep API key
+- SafeDep Tenant ID
+
+---
+
+## ⚙️ Installation Guide
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repository-url>
+cd <project-folder>
+```
+
+---
+
+### 2. Install dependencies
+
+Using npm:
+
+```bash
+npm install
+```
+
+or using pnpm:
+
+```bash
+pnpm install
+```
+
+---
+
+### 3. Environment setup
+
+Create a file named `.env.local` in the project root and add:
+
+```env
+SAFEDEP_API_KEY=your_api_key_here
+SAFEDEP_TENANT_ID=your_tenant_id_here
+```
+
+⚠️ Do not commit this file to version control.
+
+---
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+or
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open your browser at:
 
-## Learn More
+```
+http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔎 Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app uses dynamic routes:
 
-## Deploy on Vercel
+```
+/p/{ecosystem}/{package}/{version}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Examples
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+npm:
+
+```
+http://localhost:3000/p/npm/react/18.2.0
+```
+
+PyPI:
+
+```
+http://localhost:3000/p/pypi/requests/2.31.0
+```
+
+Maven:
+
+```
+http://localhost:3000/p/maven/org.apache.logging.log4j/log4j-core/2.14.1
+```
+
+Go:
+
+```
+http://localhost:3000/p/go/github.com/gin-gonic/gin/v1.9.1
+```
+
+RubyGems:
+
+```
+http://localhost:3000/p/rubygems/rails/7.1.3
+```
+
+---
+
+## 🏗️ Build for production
+
+```bash
+npm run build
+npm run start
+```
+
+---
+
+## ✅ Setup Complete
+
+The application is now ready to fetch and display SafeDep package insights.
