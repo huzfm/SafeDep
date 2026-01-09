@@ -15,7 +15,7 @@ export function LicensesTab({ insight }: { insight: InsightLicenses }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 bg-slate-50">
+          <tr className="border-b ">
             <th className="text-left py-3 px-4 font-semibold text-slate-700">
               License ID
             </th>

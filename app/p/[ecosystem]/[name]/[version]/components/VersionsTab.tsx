@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+
 interface VersionItem {
   version: string;
   publishedAt?: string;
@@ -10,54 +11,55 @@ interface VersionsInsight {
 
 export function VersionsTab({ insight }: { insight: VersionsInsight }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+    <div className="w-full overflow-x-auto">
+      <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b border-slate-200 bg-slate-50">
-            <th className="text-left py-3 px-4 font-semibold text-slate-700">
+          <tr className="border-b border-slate-300">
+            <th className="px-4 py-3 text-left font-semibold text-slate-700">
               Version
             </th>
-            <th className="text-right py-3 px-4 font-semibold text-slate-700">
-              Published On
+            <th className="px-4 py-3 text-right pr-30 font-semibold text-slate-700">
+              Published
             </th>
           </tr>
         </thead>
+
         <tbody>
           {insight.availableVersions?.map((v, i) => (
-            <tr
-              key={i}
-              className="border-b border-slate-100 hover:bg-slate-50 transition"
-            >
-              <td className="py-3 px-4">
+            <tr key={i} className="border-b border-slate-200 align-middle">
+              {/* Version */}
+              <td className="px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-slate-900">
+                  <span className="font-medium text-slate-900 bg-slate-100 px-2 py-1 rounded">
                     {v.version}
                   </span>
+
                   {i === 0 && (
-                    <Badge className="bg-teal-100 text-teal-800 text-xs px-2 py-1 border-0">
+                    <Badge className="bg-teal-100 text-teal-800 text-xs px-2 py-1 border-0 rounded-md">
                       Latest
                     </Badge>
                   )}
                 </div>
               </td>
 
-              <td className="py-3 px-4 text-right">
-                <div className="flex items-center justify-end gap-4">
-                  <span className="text-slate-600 text-xs">
+              {/* Published */}
+              <td className="px-4 py-3 text-right">
+                <div className="flex items-center justify-end">
+                  <span className="text-slate-600 text-xs whitespace-nowrap">
                     {v.publishedAt
                       ? new Date(v.publishedAt).toLocaleDateString("en-GB", {
-                          year: "2-digit",
-                          month: "2-digit",
                           day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
                         })
                       : "N/A"}
                   </span>
 
                   <a
                     href="#"
-                    className="text-teal-600 hover:text-teal-700 font-medium text-xs"
+                    className="ml-8 text-teal-600 font-medium text-xs"
                   >
-                    View Version
+                    View version
                   </a>
                 </div>
               </td>

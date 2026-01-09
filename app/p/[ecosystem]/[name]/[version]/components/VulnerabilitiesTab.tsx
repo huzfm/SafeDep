@@ -26,62 +26,51 @@ export function VulnerabilitiesTab({
   insight: VulnerabilitiesInsight;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+    <div className="w-full overflow-x-auto">
+      <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b border-slate-200 bg-slate-50">
-            <th className="text-left py-3 px-4 font-semibold text-slate-700">
+          <tr className="border-b border-slate-300">
+            <th className="px-4 py-3 text-left font-semibold text-slate-700">
               Vulnerability ID
             </th>
-            <th className="text-left py-3 px-4 font-semibold text-slate-700">
+            <th className="px-4 py-3 text-left font-semibold text-slate-700">
               Summary
             </th>
-            <th className="text-left py-3 px-4 font-semibold text-slate-700">
+            <th className="px-4 py-3 text-left font-semibold text-slate-700">
               Risk
             </th>
-            <th className="text-left py-3 px-4 font-semibold text-slate-700">
+            <th className="px-4 py-3 text-left font-semibold text-slate-700">
               Published
-            </th>
-            <th className="text-left py-3 px-4 font-semibold text-slate-700">
-              Modified
             </th>
           </tr>
         </thead>
+
         <tbody>
           {insight.vulnerabilities?.length ? (
             insight.vulnerabilities.map((v, i) => (
-              <tr
-                key={i}
-                className="border-b border-slate-100 hover:bg-slate-50 transition"
-              >
-                <td className="py-3 px-4 font-medium text-slate-900 text-xs">
+              <tr key={i} className="border-b border-slate-200 align-middle">
+                {/* ID */}
+                <td className="px-4 py-3 text-xs font-semibold text-slate-900 whitespace-nowrap">
                   {v.id?.value ?? "-"}
                 </td>
 
-                <td className="py-3 px-4 text-slate-700 max-w-xs truncate">
+                {/* Summary */}
+                <td className="px-4 py-3 text-sm text-slate-800 leading-relaxed">
                   {v.summary ?? "-"}
                 </td>
 
-                <td className="py-3 px-4">
+                {/* Risk */}
+                <td className="px-4 py-3">
                   <RiskBadge risk={v.severities?.[0]?.risk} />
                 </td>
 
-                <td className="py-3 px-4 text-slate-600 text-xs">
+                {/* Date */}
+                <td className="px-4 py-3 text-xs text-slate-600 whitespace-nowrap">
                   {v.publishedAt
                     ? new Date(v.publishedAt).toLocaleDateString("en-GB", {
-                        year: "2-digit",
-                        month: "2-digit",
                         day: "2-digit",
-                      })
-                    : "-"}
-                </td>
-
-                <td className="py-3 px-4 text-slate-600 text-xs">
-                  {v.modifiedAt
-                    ? new Date(v.modifiedAt).toLocaleDateString("en-GB", {
-                        year: "2-digit",
                         month: "2-digit",
-                        day: "2-digit",
+                        year: "numeric",
                       })
                     : "-"}
                 </td>
@@ -89,7 +78,10 @@ export function VulnerabilitiesTab({
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="py-3 px-4 text-slate-500">
+              <td
+                colSpan={4}
+                className="px-4 py-8 text-center text-slate-500 text-sm"
+              >
                 No vulnerabilities found
               </td>
             </tr>

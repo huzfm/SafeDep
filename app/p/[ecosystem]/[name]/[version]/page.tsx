@@ -83,12 +83,12 @@ export default async function PackagePage(props: PageProps) {
           insight={insight}
         />
 
-        <div className="bg-white rounded-lg border border-slate-200">
+        <div className=" rounded-lg  ">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="w-full justify-start border-b border-slate-200 bg-white p-0 rounded-none">
+            <TabsList className="w-125 justify-start  p-0 rounded-none">
               <TabsTrigger
                 value="overview"
-                className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+                className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:font-bold"
               >
                 Overview
               </TabsTrigger>
@@ -96,7 +96,7 @@ export default async function PackagePage(props: PageProps) {
               {insight.vulnerabilities?.length > 0 && (
                 <TabsTrigger
                   value="vulnerabilities"
-                  className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+                  className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:font-bold"
                 >
                   Vulnerabilities
                 </TabsTrigger>
@@ -104,34 +104,45 @@ export default async function PackagePage(props: PageProps) {
 
               <TabsTrigger
                 value="versions"
-                className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+                className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:font-bold"
               >
                 Versions
               </TabsTrigger>
 
               <TabsTrigger
                 value="licenses"
-                className="rounded-none px-4 py-3 border-b-2 border-transparent data-[state=active]:border-slate-800 data-[state=active]:bg-transparent text-sm font-medium text-slate-600 data-[state=active]:text-slate-900"
+                className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-black data-[state=active]:font-bold"
               >
                 License
               </TabsTrigger>
             </TabsList>
-
-            <TabsContent value="overview" className="p-6 space-y-6">
+            <TabsContent
+              value="overview"
+              className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
+            >
               <OverviewTab />
             </TabsContent>
 
             {insight.vulnerabilities?.length > 0 && (
-              <TabsContent value="vulnerabilities" className="p-6">
+              <TabsContent
+                value="vulnerabilities"
+                className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
+              >
                 <VulnerabilitiesTab insight={insight} />
               </TabsContent>
             )}
 
-            <TabsContent value="versions" className="p-6">
+            <TabsContent
+              value="versions"
+              className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
+            >
               <VersionsTab insight={insight} />
             </TabsContent>
 
-            <TabsContent value="licenses" className="p-6">
+            <TabsContent
+              value="licenses"
+              className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
+            >
               <LicensesTab insight={insight} />
             </TabsContent>
           </Tabs>
