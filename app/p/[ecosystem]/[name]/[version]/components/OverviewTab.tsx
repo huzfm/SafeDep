@@ -3,7 +3,7 @@ export function OverviewTab() {
     <div className="space-y-6">
       <div className="border-l-4 border-teal-500 pl-4">
         <h3 className="font-semibold text-slate-900 text-sm mb-2">Summary</h3>
-        <p className="text-sm text-teal-600 mb-2">
+        <p className="text-sm text-teal-600 mb-2 ">
           This analysis was performed using vul and SafeDep Cloud Malicious
           Package Analysis. Integrate with GitHub using vul-action GitHub
           Actions.

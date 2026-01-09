@@ -31,8 +31,8 @@ export async function getInsights() {
 
   const res = await client.getPackageVersionInsight({
     packageVersion: {
-      package: { ecosystem: Ecosystem.NPM, name: "express" },
-      version: "4.10.5",
+      package: { ecosystem: Ecosystem.NPM, name: "react" },
+      version: "18.2.0",
     },
   });
 

@@ -1,21 +1,33 @@
+import React from "react";
+
 export function StatCard({
   icon,
   label,
   value,
   color,
+  style,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
-  value: any;
-  color: string;
+  value: string | number;
+  color?: string; // tailwind class for VALUE
+  style?: React.CSSProperties; // inline style for VALUE
 }) {
   return (
-    <div className="flex flex-col items-center text-center">
-      <span className={`text-xl mb-1 ${color}`}>{icon}</span>
-      <p className="text-xs font-medium text-slate-600 uppercase mb-2">
-        {label}
-      </p>
-      <p className="text-2xl font-bold text-slate-900">{value}</p>
+    <div className="flex flex-col gap-1 text-left">
+      {/* icon + label (normal color) */}
+      <div className="flex items-center gap-2 text-sm text-slate-500">
+        <span>{icon}</span>
+        <span className="font-bold text-[16px]">{label}</span>
+      </div>
+
+      {/* value (colored + bold) */}
+      <div
+        className={`text-2xl leading-loose font-black  ${color ?? ""} mt-8`}
+        style={style}
+      >
+        {value}
+      </div>
     </div>
   );
 }

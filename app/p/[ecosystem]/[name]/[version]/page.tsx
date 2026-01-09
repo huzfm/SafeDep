@@ -75,7 +75,7 @@ export default async function PackagePage(props: PageProps) {
 
   return (
     <main className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="max-w-7xl mx-auto space-y-4">
         <HeaderCard
           name={name}
           version={version}
