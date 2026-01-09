@@ -24,7 +24,7 @@ function TabsList({
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn("inline-flex items-center gap-2", className)}
+      className={cn("inline-flex items-center gap-2 rounded-sm", className)}
       {...props}
     />
   );
@@ -38,7 +38,7 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "px-4 py-2 text-sm font-medium text-slate-600 transition-colors",
+        "px-4 py-2 text-sm font-medium text-slate-600 transition-colors rounded-sm",
         "hover:text-slate-900",
         "data-[state=active]:bg-white data-[state=active]:text-slate-900",
         "focus-visible:outline-none",

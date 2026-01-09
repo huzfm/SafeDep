@@ -43,7 +43,7 @@ export function HeaderCard({
 
   return (
     <div className="space-y-4">
-      {/* Top bar */}
+      {}
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <span className="text-[12px] font-thin text-slate-400 uppercase tracking-wider">
@@ -63,15 +63,15 @@ export function HeaderCard({
         </div>
 
         <button className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-sm text-xs font-semibold hover:bg-teal-700 transition">
-          {/* <Github width={14} height={14} /> */}
+          {}
           <i className="fa-brands fa-github text-[15px]"></i>
           <span className="font-bold text-[15px]">Install GitHub App</span>
         </button>
       </div>
 
-      {/* White card */}
+      {}
       <div className="bg-white p-6 rounded-lg  ">
-        {/* Package info */}
+        {}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
             <i className="fa-brands fa-github text-lg border-2 border-slate-100 px-2 pr-6 py-1 bg-white  rounded-md"></i>{" "}
@@ -125,15 +125,15 @@ export function HeaderCard({
           </div>
         </div>
 
-        {/* Stats row */}
+        {}
         <div className="grid grid-cols-5 gap-4">
-          <div className="bg-white border border-slate-200 rounded-sm p-4">
+          <div className="bg-white border border-slate-200 rounded-sm p-4 ">
             <StatCard
               icon={
                 <Info
                   height={25}
                   width={25}
-                  className="text-[#009699] border-2 p-1 rounded-sm"
+                  className="text-[#009699] border-2 p-1 rounded-2xl"
                 />
               }
               label="Version"

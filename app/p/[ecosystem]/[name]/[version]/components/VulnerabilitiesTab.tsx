@@ -49,22 +49,22 @@ export function VulnerabilitiesTab({
           {insight.vulnerabilities?.length ? (
             insight.vulnerabilities.map((v, i) => (
               <tr key={i} className="border-b border-slate-200 align-middle">
-                {/* ID */}
+                {}
                 <td className="px-4 py-3 text-xs font-semibold text-slate-900 whitespace-nowrap">
                   {v.id?.value ?? "-"}
                 </td>
 
-                {/* Summary */}
+                {}
                 <td className="px-4 py-3 text-sm text-slate-800 leading-relaxed">
                   {v.summary ?? "-"}
                 </td>
 
-                {/* Risk */}
+                {}
                 <td className="px-4 py-3">
                   <RiskBadge risk={v.severities?.[0]?.risk} />
                 </td>
 
-                {/* Date */}
+                {}
                 <td className="px-4 py-3 text-xs text-slate-600 whitespace-nowrap">
                   {v.publishedAt
                     ? new Date(v.publishedAt).toLocaleDateString("en-GB", {

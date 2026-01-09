@@ -14,8 +14,6 @@ import { VersionsTab } from "./components/VersionsTab";
 import { LicensesTab } from "./components/LicensesTab";
 import { ErrorState } from "./components/ErrorState";
 
-/* ---------------- auth ---------------- */
-
 function authenticationInterceptor(token: string, tenant: string): Interceptor {
   return (next) => async (req) => {
     req.header.set("authorization", token);
@@ -23,8 +21,6 @@ function authenticationInterceptor(token: string, tenant: string): Interceptor {
     return await next(req);
   };
 }
-
-/* ---------------- ecosystem mapping ---------------- */
 
 function mapEcosystem(value: string): Ecosystem {
   switch (value.toLowerCase()) {
@@ -66,8 +62,6 @@ function mapEcosystem(value: string): Ecosystem {
   }
 }
 
-/* ---------------- types ---------------- */
-
 interface PageProps {
   params: Promise<{
     ecosystem: string;
@@ -102,8 +96,6 @@ type Insight = {
   [key: string]: unknown;
 };
 
-/* ---------------- page ---------------- */
-
 export default async function PackagePage(props: PageProps) {
   const { ecosystem, name, version } = await props.params;
 
@@ -132,8 +124,6 @@ export default async function PackagePage(props: PageProps) {
   let insight: Insight | null = null;
   let apiError: string | null = null;
 
-  /* ---------- ecosystem validation ---------- */
-
   try {
     mappedEcosystem = mapEcosystem(ecosystem);
   } catch (err: unknown) {
@@ -145,8 +135,6 @@ export default async function PackagePage(props: PageProps) {
       />
     );
   }
-
-  /* ---------- SafeDep API call ---------- */
 
   try {
     const res = await client.getPackageVersionInsight({
@@ -171,8 +159,6 @@ export default async function PackagePage(props: PageProps) {
         : "Unexpected error while contacting SafeDep API.";
   }
 
-  /* ---------- graceful failure ---------- */
-
   if (!insight) {
     return (
       <ErrorState
@@ -184,8 +170,6 @@ export default async function PackagePage(props: PageProps) {
       />
     );
   }
-
-  /* ---------- success UI ---------- */
 
   return (
     <main className="min-h-screen bg-[#E2E8F0] p-6">

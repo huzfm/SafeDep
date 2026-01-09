@@ -27,7 +27,7 @@ export function VersionsTab({ insight }: { insight: VersionsInsight }) {
         <tbody>
           {insight.availableVersions?.map((v, i) => (
             <tr key={i} className="border-b border-slate-200 align-middle">
-              {/* Version */}
+              {}
               <td className="px-4 py-3">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-slate-900 bg-slate-100 px-2 py-1 rounded">
@@ -42,7 +42,7 @@ export function VersionsTab({ insight }: { insight: VersionsInsight }) {
                 </div>
               </td>
 
-              {/* Published */}
+              {}
               <td className="px-4 py-3 text-right">
                 <div className="flex items-center justify-end">
                   <span className="text-black font-bold text-xs whitespace-nowrap">
