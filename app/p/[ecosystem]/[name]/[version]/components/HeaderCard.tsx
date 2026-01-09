@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { StatCard } from "./StatCard";
-import { Award, BookMarked, Bug, Earth, Github, Info } from "lucide-react";
+import { Award, BookMarked, Bug, Earth, Info } from "lucide-react";
 
 interface HeaderInsight {
   packagePublishedAt: string | number;
@@ -50,7 +50,7 @@ export function HeaderCard({
             powered by
           </span>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center  font-bold">
             <Image
               src="/logo.png"
               alt="SafeDep"
@@ -58,22 +58,23 @@ export function HeaderCard({
               height={24}
               className="object-contain"
             />
-            <p className="font-bold text-2xl">SafeDep</p>
+            <p className="font-bold text-xl">SafeDep</p>
           </div>
         </div>
 
         <button className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-sm text-xs font-semibold hover:bg-teal-700 transition">
-          <Github width={14} height={14} />
+          {/* <Github width={14} height={14} /> */}
+          <i className="fa-brands fa-github text-[15px]"></i>
           <span className="font-bold text-[15px]">Install GitHub App</span>
         </button>
       </div>
 
       {/* White card */}
-      <div className="bg-white p-6 rounded-lg border border-slate-200">
+      <div className="bg-white p-6 rounded-lg  ">
         {/* Package info */}
-        <div className="mb-6 pb-6 border-b border-slate-200">
+        <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
-            <Github className="border rounded-sm p-1" />
+            <i className="fa-brands fa-github text-lg border-2 border-slate-100 px-2 pr-6 py-1 bg-white  rounded-md"></i>{" "}
             <span className="text-xl font-bold text-slate-900">
               {name}@{version}
             </span>

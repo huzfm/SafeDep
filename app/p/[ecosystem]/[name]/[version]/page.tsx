@@ -12,6 +12,9 @@ import { OverviewTab } from "./components/OverviewTab";
 import { VulnerabilitiesTab } from "./components/VulnerabilitiesTab";
 import { VersionsTab } from "./components/VersionsTab";
 import { LicensesTab } from "./components/LicensesTab";
+import { ErrorState } from "./components/ErrorState";
+
+/* ---------------- auth ---------------- */
 
 function authenticationInterceptor(token: string, tenant: string): Interceptor {
   return (next) => async (req) => {
@@ -21,20 +24,49 @@ function authenticationInterceptor(token: string, tenant: string): Interceptor {
   };
 }
 
+/* ---------------- ecosystem mapping ---------------- */
+
 function mapEcosystem(value: string): Ecosystem {
   switch (value.toLowerCase()) {
     case "npm":
       return Ecosystem.NPM;
+
     case "pypi":
+    case "python":
       return Ecosystem.PYPI;
+
     case "maven":
+    case "gradle":
       return Ecosystem.MAVEN;
+
     case "golang":
+    case "go":
       return Ecosystem.GO;
+
+    case "rubygems":
+    case "ruby":
+    case "gem":
+      return Ecosystem.RUBYGEMS;
+
+    case "cargo":
+    case "rust":
+      return Ecosystem.CARGO;
+
+    case "nuget":
+    case "dotnet":
+      return Ecosystem.NUGET;
+
+    case "packagist":
+    case "composer":
+    case "php":
+      return Ecosystem.PACKAGIST;
+
     default:
       throw new Error(`Unsupported ecosystem: ${value}`);
   }
 }
+
+/* ---------------- types ---------------- */
 
 interface PageProps {
   params: Promise<{
@@ -44,12 +76,49 @@ interface PageProps {
   }>;
 }
 
+type VulnerabilityItem = {
+  id?: { value?: string };
+  summary?: string;
+  severities?: { risk?: string }[];
+  publishedAt?: string;
+  modifiedAt?: string;
+};
+
+type LicenseItem = {
+  licenseId: string;
+  licenseName?: string;
+  referenceUrl?: string;
+};
+
+type Insight = {
+  packagePublishedAt: string | number;
+  registries?: string[];
+  sha256?: string;
+  confidence?: string | number;
+  vulnerabilities?: VulnerabilityItem[];
+  projectInsights?: Array<{ scorecard?: { score?: number } }>;
+  licenses?: { licenses?: LicenseItem[] };
+  availableVersions?: Array<{ version: string; publishedAt?: string }>;
+  [key: string]: unknown;
+};
+
+/* ---------------- page ---------------- */
+
 export default async function PackagePage(props: PageProps) {
   const { ecosystem, name, version } = await props.params;
 
   const token = process.env.SAFEDEP_API_KEY;
   const tenant = process.env.SAFEDEP_TENANT_ID;
-  if (!token || !tenant) throw new Error("Missing SAFEDEP env vars");
+
+  if (!token || !tenant) {
+    return (
+      <ErrorState
+        title="Configuration error"
+        message="SafeDep credentials are missing."
+        detail="SAFEDEP_API_KEY or SAFEDEP_TENANT_ID is not set."
+      />
+    );
+  }
 
   const transport = createConnectTransport({
     baseUrl: "https://api.safedep.io",
@@ -59,22 +128,67 @@ export default async function PackagePage(props: PageProps) {
 
   const client = createPromiseClient(InsightService, transport);
 
-  const res = await client.getPackageVersionInsight({
-    packageVersion: {
-      package: { ecosystem: mapEcosystem(ecosystem), name },
-      version,
-    },
-  });
-  const data = res.toJson() as unknown;
+  let mappedEcosystem: Ecosystem | null = null;
+  let insight: Insight | null = null;
+  let apiError: string | null = null;
 
-  if (!data || typeof data !== "object" || !("insight" in data)) {
-    throw new Error("Invalid response from SafeDep API");
+  /* ---------- ecosystem validation ---------- */
+
+  try {
+    mappedEcosystem = mapEcosystem(ecosystem);
+  } catch (err: unknown) {
+    return (
+      <ErrorState
+        title="Unsupported ecosystem"
+        message={`"${ecosystem}" is not supported.`}
+        detail={err instanceof Error ? err.message : String(err)}
+      />
+    );
   }
 
-  const insight = (data as { insight: any }).insight;
+  /* ---------- SafeDep API call ---------- */
+
+  try {
+    const res = await client.getPackageVersionInsight({
+      packageVersion: {
+        package: { ecosystem: mappedEcosystem, name },
+        version,
+      },
+    });
+
+    const data = res.toJson() as unknown;
+
+    if (!data || typeof data !== "object" || !("insight" in data)) {
+      apiError = "No insight data returned from SafeDep.";
+    } else {
+      insight = (data as { insight: Insight }).insight;
+    }
+  } catch (err: unknown) {
+    console.error("SafeDep API error:", err);
+    apiError =
+      err instanceof Error
+        ? err.message
+        : "Unexpected error while contacting SafeDep API.";
+  }
+
+  /* ---------- graceful failure ---------- */
+
+  if (!insight) {
+    return (
+      <ErrorState
+        title="Package not found"
+        message={`We could not find ${name}@${version} in ${ecosystem}.`}
+        detail={
+          apiError ?? "The package may not exist or SafeDep has no data yet."
+        }
+      />
+    );
+  }
+
+  /* ---------- success UI ---------- */
 
   return (
-    <main className="min-h-screen bg-slate-100 p-6">
+    <main className="min-h-screen bg-[#E2E8F0] p-6">
       <div className="max-w-7xl mx-auto space-y-4">
         <HeaderCard
           name={name}
@@ -83,70 +197,48 @@ export default async function PackagePage(props: PageProps) {
           insight={insight}
         />
 
-        <div className=" rounded-lg  ">
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="w-125 justify-start  p-0 rounded-none">
-              <TabsTrigger
-                value="overview"
-                className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:font-bold"
-              >
-                Overview
-              </TabsTrigger>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="px-10 justify-start">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
 
-              {insight.vulnerabilities?.length > 0 && (
-                <TabsTrigger
-                  value="vulnerabilities"
-                  className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:font-bold"
-                >
-                  Vulnerabilities
-                </TabsTrigger>
-              )}
-
-              <TabsTrigger
-                value="versions"
-                className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:font-bold"
-              >
-                Versions
-              </TabsTrigger>
-
-              <TabsTrigger
-                value="licenses"
-                className="rounded-sm px-4 py-2  data-[state=active]:border-slate-800 data-[state=active]: text-sm font-medium text-slate-600 data-[state=active]:text-black data-[state=active]:font-bold"
-              >
-                License
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent
-              value="overview"
-              className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
-            >
-              <OverviewTab />
-            </TabsContent>
-
-            {insight.vulnerabilities?.length > 0 && (
-              <TabsContent
-                value="vulnerabilities"
-                className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
-              >
-                <VulnerabilitiesTab insight={insight} />
-              </TabsContent>
+            {(insight.vulnerabilities?.length ?? 0) > 0 && (
+              <TabsTrigger value="vulnerabilities">Vulnerabilities</TabsTrigger>
             )}
 
-            <TabsContent
-              value="versions"
-              className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
-            >
-              <VersionsTab insight={insight} />
-            </TabsContent>
+            <TabsTrigger value="versions">Versions</TabsTrigger>
+            <TabsTrigger value="licenses">License</TabsTrigger>
+          </TabsList>
 
+          <TabsContent
+            value="overview"
+            className="w-full min-h-screen p-6 bg-white rounded-lg border border-slate-200"
+          >
+            <OverviewTab />
+          </TabsContent>
+
+          {(insight.vulnerabilities?.length ?? 0) > 0 && (
             <TabsContent
-              value="licenses"
-              className="w-full min-h-screen p-6 space-y-6 bg-white rounded-lg border border-slate-200"
+              value="vulnerabilities"
+              className="w-full min-h-screen p-6 bg-white rounded-lg border border-slate-200"
             >
-              <LicensesTab insight={insight} />
+              <VulnerabilitiesTab insight={insight} />
             </TabsContent>
-          </Tabs>
-        </div>
+          )}
+
+          <TabsContent
+            value="versions"
+            className="w-full min-h-screen p-6 bg-white rounded-lg border border-slate-200"
+          >
+            <VersionsTab insight={insight} />
+          </TabsContent>
+
+          <TabsContent
+            value="licenses"
+            className="w-full min-h-screen p-6 bg-white rounded-lg border border-slate-200"
+          >
+            <LicensesTab insight={insight} />
+          </TabsContent>
+        </Tabs>
       </div>
     </main>
   );

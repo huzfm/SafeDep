@@ -31,8 +31,8 @@ export async function getInsights() {
 
   const res = await client.getPackageVersionInsight({
     packageVersion: {
-      package: { ecosystem: Ecosystem.NPM, name: "react" },
-      version: "18.2.0",
+      package: { ecosystem: Ecosystem.RUBYGEMS, name: "rails" },
+      version: "7.1.3",
     },
   });
 

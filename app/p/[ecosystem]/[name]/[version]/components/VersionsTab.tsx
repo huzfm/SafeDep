@@ -45,7 +45,7 @@ export function VersionsTab({ insight }: { insight: VersionsInsight }) {
               {/* Published */}
               <td className="px-4 py-3 text-right">
                 <div className="flex items-center justify-end">
-                  <span className="text-slate-600 text-xs whitespace-nowrap">
+                  <span className="text-black font-bold text-xs whitespace-nowrap">
                     {v.publishedAt
                       ? new Date(v.publishedAt).toLocaleDateString("en-GB", {
                           day: "2-digit",
