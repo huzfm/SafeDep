@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { Ecosystem } from "@buf/safedep_api.bufbuild_es/safedep/messages/package/v1/ecosystem_pb.js";
