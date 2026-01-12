@@ -14,6 +14,7 @@ import { VersionsTab } from "./components/VersionsTab";
 import { LicensesTab } from "./components/LicensesTab";
 import { ErrorState } from "./components/ErrorState";
 
+//authentication interceptor
 function authenticationInterceptor(token: string, tenant: string): Interceptor {
   return (next) => async (req) => {
     req.header.set("authorization", token);
@@ -22,6 +23,7 @@ function authenticationInterceptor(token: string, tenant: string): Interceptor {
   };
 }
 
+//map ecosystem to enum
 function mapEcosystem(value: string): Ecosystem {
   switch (value.toLowerCase()) {
     case "npm":
@@ -111,13 +113,14 @@ export default async function PackagePage(props: PageProps) {
       />
     );
   }
-
+//creating transport with authentication
   const transport = createConnectTransport({
     baseUrl: "https://api.safedep.io",
     httpVersion: "1.1",
     interceptors: [authenticationInterceptor(token, tenant)],
   });
 
+  //creating client
   const client = createPromiseClient(InsightService, transport);
 
   let mappedEcosystem: Ecosystem | null = null;
@@ -137,6 +140,7 @@ export default async function PackagePage(props: PageProps) {
   }
 
   try {
+    //making API call
     const res = await client.getPackageVersionInsight({
       packageVersion: {
         package: { ecosystem: mappedEcosystem, name },
